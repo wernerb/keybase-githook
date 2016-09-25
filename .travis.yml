@@ -4,12 +4,12 @@ services:
   - docker
 
 before_install:
-  - apt-get install -y jq
+  - sudo apt-get install -y jq
   - docker pull gitlab/gitlab-ce:latest
   - |
     docker run --detach \
     --hostname gitlab.local \
-    --publish 443:443 --publish 80:80 --publish 22:22 \
+    --publish 443:443 --publish 80:80 \
     --name gitlab \
     -e "GITLAB_ROOT_PASSWORD=thisisjustatest" \
     --restart always \
@@ -25,3 +25,6 @@ before_install:
   - |
     export PRIVATE_TOKEN=$(curl http://localhost/api/v3/session/ --data-urlencode 'login=root' --data-urlencode 'password=thisisjustatest' | jq -r .private_token) && \
     curl --header "PRIVATE-TOKEN: $PRIVATE_TOKEN" -X POST "http://localhost/api/v3/projects?name=foobartest"
+
+script:
+  - echo Hello
